@@ -1014,7 +1014,7 @@ func ensureTable(ctx context.Context, ch clickhouse.Conn, db string) error {
 		) ENGINE = MergeTree()
 		PARTITION BY toYYYYMMDD(event_timestamp)
 		ORDER BY (project_id, event_type, event_timestamp, trace_id)
-		TTL received_at + INTERVAL 90 DAY
+		TTL toDateTime(received_at) + INTERVAL 90 DAY
 		SETTINGS index_granularity = 8192
 	`, db))
 }

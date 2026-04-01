@@ -1,0 +1,22 @@
+.git
+.gitignore
+.DS_Store
+.idea/
+.vscode/
+
+# Air / hot reload artefacts
+tmp/
+.air.toml
+
+# Docker build context (not needed inside the image)
+docker/
+
+# Test artefacts
+*.test
+*.out
+coverage.out
+*.coverprofile
+
+# Local env overrides
+.env
+.env.local

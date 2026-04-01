@@ -20,13 +20,14 @@ func main() {
 	slog.SetDefault(logger)
 
 	bufferAddr := envOr("REDIS_BUFFER_ADDR", "localhost:6379")
+	bufferPass := envOr("REDIS_BUFFER_PASSWORD", "")
 	chAddr := envOr("CLICKHOUSE_ADDR", "localhost:9000")
 	chDB := envOr("CLICKHOUSE_DB", "telemetry")
 	chUser := envOr("CLICKHOUSE_USER", "watchtower")
 	chPass := envOr("CLICKHOUSE_PASSWORD", "")
 	healthPort := envOr("HEALTH_PORT", "3001")
 
-	c, err := consumer.New(bufferAddr, chAddr, chDB, chUser, chPass)
+	c, err := consumer.New(bufferAddr, bufferPass, chAddr, chDB, chUser, chPass)
 	if err != nil {
 		slog.Error("failed to initialise consumer", "error", err)
 		os.Exit(1)

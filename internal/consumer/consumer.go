@@ -178,9 +178,10 @@ type Consumer struct {
 	ch  clickhouse.Conn
 }
 
-func New(bufferAddr, chAddr, chDB, chUser, chPass string) (*Consumer, error) {
+func New(bufferAddr, bufferPass, chAddr, chDB, chUser, chPass string) (*Consumer, error) {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:         bufferAddr,
+		Password:     bufferPass,
 		DialTimeout:  5 * time.Second,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 5 * time.Second,

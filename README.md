@@ -4,7 +4,7 @@ The telemetry worker service for [Watchtower APM](https://github.com/watchtowera
 
 [![CI](https://github.com/watchtowerapm/worker-service/actions/workflows/ci.yml/badge.svg?branch=1.x)](https://github.com/watchtowerapm/worker-service/actions/workflows/ci.yml)
 [![Release](https://github.com/watchtowerapm/worker-service/actions/workflows/release.yml/badge.svg)](https://github.com/watchtowerapm/worker-service/actions/workflows/release.yml)
-[![Go Version](https://img.shields.io/badge/go-1.23-00ADD8?logo=go)](go.mod)
+[![Go Version](https://img.shields.io/badge/go-1.27-00ADD8?logo=go)](go.mod)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 ---
@@ -77,11 +77,13 @@ All configuration is via environment variables.
 | Variable | Default | Description |
 |---|---|---|
 | `REDIS_BUFFER_ADDR` | `localhost:6379` | Redis Stream host |
+| `REDIS_BUFFER_PASSWORD` | _(empty)_ | Redis Stream password |
 | `CLICKHOUSE_ADDR` | `localhost:9000` | ClickHouse native protocol host |
 | `CLICKHOUSE_DB` | `telemetry` | ClickHouse database name |
 | `CLICKHOUSE_USER` | `watchtower` | ClickHouse username |
 | `CLICKHOUSE_PASSWORD` | _(empty)_ | ClickHouse password |
 | `HEALTH_PORT` | `3001` | HTTP health endpoint port |
+| `WORKER_NAME` | `worker-1` | Redis consumer name (unique per replica) |
 
 ---
 
@@ -101,7 +103,7 @@ docker pull ghcr.io/watchtowerapm/worker-service:1
 
 ## Development
 
-**Prerequisites:** Go 1.23+, Docker, Make.
+**Prerequisites:** Go 1.27+, Docker, Make.
 
 ```bash
 # Start all dependencies + worker with hot reload
@@ -122,11 +124,14 @@ make cover                # open HTML coverage report
 worker-service/
 ├── cmd/worker/          # main entrypoint
 ├── internal/
-│   ├── consumer/        # Redis Stream consumer + ClickHouse writer
+│   ├── config/          # environment helpers
+│   ├── consumer/        # stream loop, payload mapping, ClickHouse schema
 │   └── handler/         # HTTP health handler
 └── docker/
     └── Dockerfile       # multi-stage: dev (Air) · builder · prod (distroless)
 ```
+
+CI on `1.x` and `develop` runs `go vet`, golangci-lint, and `go test -race`. Production images are built from `1.x` tags, not `develop`.
 
 ---
 

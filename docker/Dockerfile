@@ -1,7 +1,7 @@
 # =============================================================================
 # Stage 1: Go module cache (shared by dev and prod)
 # =============================================================================
-FROM golang:1.23.8-alpine3.21 AS base
+FROM golang:1.27-alpine AS base
 
 RUN apk add --no-cache git ca-certificates tzdata
 WORKDIR /app

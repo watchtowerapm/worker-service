@@ -96,8 +96,12 @@ func TestBuildTelemetryInsertFieldsRequestDoesNotFillOutgoing(t *testing.T) {
 }
 
 func TestParseUUIDAndFloatToTime(t *testing.T) {
-	if parseUUID("not-a-uuid") == parseUUID("00000000-0000-0000-0000-000000000000") {
-		// both nil uuid is expected for invalid; just ensure it doesn't panic
+	if parseUUID("not-a-uuid") != parseUUID("00000000-0000-0000-0000-000000000000") {
+		t.Fatal("invalid UUID should map to uuid.Nil")
+	}
+	valid := "550e8400-e29b-41d4-a716-446655440000"
+	if parseUUID(valid).String() != valid {
+		t.Fatalf("valid UUID = %s", parseUUID(valid))
 	}
 	fallback := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
 	if !floatToTime(0, fallback).Equal(fallback) {
